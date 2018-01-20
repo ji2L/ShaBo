@@ -1,3 +1,3 @@
-#ShaBo
-Discord BOT
+# ShaBo
 
+Discord BOT using JDA.
