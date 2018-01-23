@@ -28,32 +28,17 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 import javax.security.auth.login.LoginException;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.Random;
 
 public class ShaBo extends ListenerAdapter
 {
     public static void main(String[] args)
     {
-    	BufferedReader in;
-    	String token = "";
-    	
-		try {
-			in = new BufferedReader(new FileReader("token.txt"));
-			token = in.readLine();
-			in.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+    	Config config = new Config("token.txt");
 
         try {
             JDA jda = new JDABuilder(AccountType.BOT)
-                    		.setToken(token)
+                    		.setToken(config.getBotToken())
                     		.addEventListener(new ShaBo())
                     		.buildBlocking();
         } catch (LoginException e) {
