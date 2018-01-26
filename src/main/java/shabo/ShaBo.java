@@ -32,7 +32,7 @@ public class ShaBo extends ListenerAdapter
     public static void main(String[] args)
     {
     	Config config = new Config("token.txt");
-    	
+
         try {
             JDA jda = new JDABuilder(AccountType.BOT)
                     		.setToken(config.getBotToken())
