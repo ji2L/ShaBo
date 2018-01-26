@@ -20,4 +20,7 @@ package shabo.command;
 
 public class CommandInitializer {
 
+	public static void initCommands() {
+		
+	}
 }

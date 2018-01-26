@@ -18,6 +18,58 @@
 
 package shabo.command;
 
-public class CommandRegistry {
+import java.util.HashMap;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import shabo.command.abs.Command;
+
+/**
+ * This class is a registry which maps every command name and aliases to actual commands.
+ * 
+ * @author ji2L
+ */
+public class CommandRegistry {
+	
+	private static CommandRegistry commandRegistry;
+	private HashMap<String, Command> registry = new HashMap<String, Command>();
+
+	public CommandRegistry() {
+		commandRegistry = this;
+	}
+	
+	/**
+	 * Adds a command to the registry, creating an entry for each alias.
+	 * 
+	 * @param command - the command to add to the registry
+	 */
+	public void registerCommand(@Nonnull Command command) {
+		String name = command.getName().toLowerCase();
+		registry.put(name, command);
+		
+		for(String alias : command.getAliases())
+			registry.put(alias, command);
+	}
+	
+	/**
+	 * Returns a command from the registry.
+	 * 
+	 * @param name - the name of the command to get
+	 * @return The command corresponding to name or null if no entry was found
+	 */
+	public Command getCommand(@Nonnull String name) {
+		return registry.get(name);
+	}
+	
+	/**
+	 * Statically finds a command in the registry.
+	 * 
+	 * @param name - the name of the command to find
+	 * @return The command corresponding to name or null if no entry was found
+	 */
+	@Nullable
+	public static Command findCommand(@Nonnull String name) {
+		return commandRegistry.getCommand(name);
+	}
 }
