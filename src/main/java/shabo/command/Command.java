@@ -18,29 +18,40 @@
 
 package shabo.command;
 
+import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.Nonnull;
 
 /**
- * 
+ * Abstract class to describe a command.
  * @author ji2L
- *
  */
 public abstract class Command implements ICommand {
 	
 	private String name;
 	private List<String> aliases;
 	
-	public Command(@Nonnull String name, List<String> aliases) {
+	/**
+	 * Command constructor.
+	 * @param name - The default name of the command (cannot be null)
+	 * @param aliases - An arbitrary number of aliases for the command
+	 */
+	public Command(@Nonnull String name, String... aliases) {
 		this.name = name;
-		this.aliases = aliases;
+		this.aliases = Arrays.asList(aliases);
 	}
 	
+	/**
+	 * @return The name of the command
+	 */
 	public String getName() {
 		return name;
 	}
 	
+	/**
+	 * @return The aliases of the command
+	 */
 	public List<String> getAliases() {
 		return aliases;
 	}
