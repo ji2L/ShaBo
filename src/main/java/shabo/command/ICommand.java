@@ -18,30 +18,23 @@
 
 package shabo.command;
 
-import java.util.List;
-
 import javax.annotation.Nonnull;
 
 /**
- * 
+ * Interfaces forcing commands to have at least "invoke" and "help" mehtods
  * @author ji2L
  *
  */
-public abstract class Command implements ICommand {
+public interface ICommand {
 	
-	private String name;
-	private List<String> aliases;
+	/**
+	 * Invokes the command.
+	 */
+	public void invoke();
 	
-	public Command(@Nonnull String name, List<String> aliases) {
-		this.name = name;
-		this.aliases = aliases;
-	}
-	
-	public String getName() {
-		return name;
-	}
-	
-	public List<String> getAliases() {
-		return aliases;
-	}
+	/**
+	 * @return A string describing the command and, if needed, how to use it 
+	 */
+	@Nonnull
+	public String help();
 }
