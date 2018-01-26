@@ -25,6 +25,7 @@ import javax.annotation.Nonnull;
 
 /**
  * Abstract class to describe a command.
+ * 
  * @author ji2L
  */
 public abstract class Command implements ICommand {
@@ -34,6 +35,7 @@ public abstract class Command implements ICommand {
 	
 	/**
 	 * Command constructor.
+	 * 
 	 * @param name - The default name of the command (cannot be null)
 	 * @param aliases - An arbitrary number of aliases for the command
 	 */

@@ -63,9 +63,7 @@ public class Config {
 	}
 	
 	/**
-	 * Returns the bot's token.
-	 * 
-	 * @return - the bot's token
+	 * @return The bot's token
 	 */
 	public String getBotToken() {
 		return botToken;

@@ -33,6 +33,11 @@ import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
+/**
+ * This class contains the event listeners used by the bot.
+ * 
+ * @author ji2L
+ */
 public class EventListeners extends ListenerAdapter {
 	
 	public EventListeners() {

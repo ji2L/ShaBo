@@ -22,6 +22,7 @@ import javax.annotation.Nonnull;
 
 /**
  * Interfaces forcing commands to have at least "invoke" and "help" mehtods
+ * 
  * @author ji2L
  *
  */
