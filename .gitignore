@@ -81,8 +81,6 @@ local.properties
 /build/
 .nb-gradle/
 .gradle
-# Avoid ignoring Gradle wrapper jar file
-!gradle-wrapper.jar
 
 ### Custom ###
 
@@ -93,3 +91,6 @@ token.txt
 notice.txt
 *.jar
 *.war
+
+# Avoid ignoring Gradle wrapper jar file
+!gradle-wrapper.jar
