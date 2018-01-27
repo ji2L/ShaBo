@@ -73,14 +73,23 @@ local.properties
 .scala_dependencies
 .worksheet
 
+# Java
+.class
+
+### Gradle ###
+
+/build/
+.nb-gradle/
+.gradle
+# Avoid ignoring Gradle wrapper jar file
+!gradle-wrapper.jar
+
 ### Custom ###
 
 lib/
 logs/
-build/
 dist/*
-.nb-gradle/
-.gradle/*
 token.txt
 notice.txt
 *.jar
+*.war
