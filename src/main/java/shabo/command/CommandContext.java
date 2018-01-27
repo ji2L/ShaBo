@@ -31,16 +31,23 @@ import net.dv8tion.jda.core.entities.Message;
 import shabo.Config;
 import shabo.command.abs.Command;
 
+/**
+ * This class represents the context of a command.
+ * A context gathers info about the guild and the text channel in which the command was sent, as well as who sent it and the message itself.
+ * It is used to parse a message to extract the arguments of a command and find the right command in the registry.
+ * 
+ * @author ji2L
+ */
 public class CommandContext {
 
-	private final Guild guild;
-	private final TextChannel textChannel;
-	private final Member invoker;
-	private final Message message;
+	private final Guild guild;				//The Guild that this message was sent in. (Guilds are Servers)
+	private final TextChannel textChannel;	//The TextChannel that this message was sent to.
+	private final Member invoker;			//The Member that sent the message.
+	private final Message message;			//The message that was received.
 	
-	private String[] args;
-	private Command command;
-	private String trigger;
+	private String[] args;					//The arguments of the command (excluding its name).
+	private Command command;				//The corresponding command in the registry.
+	private String trigger;					//The trigger (name) of the command.
 	
 	private CommandContext(@Nonnull Guild guild, @Nonnull TextChannel textChannel, @Nonnull Member invoker, @Nonnull Message message) {
 		this.guild = guild;
@@ -49,6 +56,12 @@ public class CommandContext {
 		this.message = message;
 	}
 	
+	/**
+	 * Parses a received message to extract the neccessary information to create a CommandContext (guild, text channel, etc.)
+	 * 
+	 * @param event - the event to parse
+	 * @return A command context for the event or null if the command doesn't exist
+	 */
 	public static CommandContext parse(MessageReceivedEvent event) {
         Guild guild = event.getGuild();
         TextChannel textChannel = event.getTextChannel();
@@ -59,6 +72,8 @@ public class CommandContext {
         String rawMessage = message.getContentRaw();
         if(rawMessage.startsWith(prefix))
         	rawMessage = rawMessage.substring(prefix.length());
+        else
+        	return null; //Not a command
         
         //use \p{javaSpaceChar} because it includes unicode whitespace, add + to skip multiple whitespaces
         String[] args = rawMessage.split("\\p{javaSpaceChar}+");
@@ -83,42 +98,63 @@ public class CommandContext {
         return commandContext;
 	}
 	
-	public void setArgs(String[] args) {
+	private void setArgs(String[] args) {
 		this.args = args;
 	}
 	
-	public void setCommand(Command command) {
+	private void setCommand(Command command) {
 		this.command = command;
 	}
 	
-	public void setTrigger(String trigger) {
+	private void setTrigger(String trigger) {
 		this.trigger = trigger;
 	}
 
+	/**
+	 * @return The guild the message was sent in
+	 */
 	public Guild getGuild() {
 		return guild;
 	}
 
+	/**
+	 * @return The text channel the message was sent in
+	 */
 	public TextChannel getTextChannel() {
 		return textChannel;
 	}
 
+	/**
+	 * @return The member who sent the message
+	 */
 	public Member getInvoker() {
 		return invoker;
 	}
 
+	/**
+	 * @return The message that was sent
+	 */
 	public Message getMessage() {
 		return message;
 	}
 
+	/**
+	 * @return The arguments of the command, excluding its name
+	 */
 	public String[] getArgs() {
 		return args;
 	}
 
+	/**
+	 * @return The corresponding command in the command registry
+	 */
 	public Command getCommand() {
 		return command;
 	}
 
+	/**
+	 * @return The name (trigger) of the command
+	 */
 	public String getTrigger() {
 		return trigger;
 	}
