@@ -16,30 +16,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package shabo.command.abs;
+package shabo.command;
 
-import javax.annotation.Nonnull;
+import shabo.command.abs.Command;
 
-import shabo.command.CommandContext;
-
-/**
- * Interfaces forcing commands to have at least "invoke" and "help" mehtods
- * 
- * @author ji2L
- *
- */
-public interface ICommand {
+public class CommandManager {
 	
-	/**
-	 * Invokes the command.
-	 * 
-	 * @param commandContext - the context in which the command was sent
-	 */
-	public void invoke(CommandContext commandContext);
-	
-	/**
-	 * @return A string describing the command and, if needed, how to use it 
-	 */
-	@Nonnull
-	public String help();
+	public static void commandCalled(CommandContext commandContext) {
+		Command command = commandContext.getCommand();
+		
+		command.invoke(commandContext);
+	}
+
 }
