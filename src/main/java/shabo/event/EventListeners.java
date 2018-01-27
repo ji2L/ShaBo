@@ -18,20 +18,18 @@
 
 package shabo.event;
 
-import java.util.Random;
-
 import net.dv8tion.jda.client.entities.Group;
-import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.MessageChannel;
-import net.dv8tion.jda.core.entities.PrivateChannel;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
+
+import shabo.command.CommandContext;
+import shabo.command.CommandManager;
 
 /**
  * This class contains the event listeners used by the bot.
@@ -40,20 +38,12 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
  */
 public class EventListeners extends ListenerAdapter {
 	
-	public EventListeners() {
-	}
-
     @Override
     public void onMessageReceived(MessageReceivedEvent event)
     {
-        JDA jda = event.getJDA();
-        long responseNumber = event.getResponseNumber();
-
         //Event specific information
         User author = event.getAuthor();                //The user that sent the message
         Message message = event.getMessage();           //The message that was received.
-        MessageChannel channel = event.getChannel();    //The MessageChannel that the message was sent to.
-
         String msg = message.getContentDisplay();		//A human readable version of the Message.
 
         boolean bot = author.isBot();
@@ -67,20 +57,23 @@ public class EventListeners extends ListenerAdapter {
 
             String name;
             if (message.isWebhookMessage())
-            {
-                name = author.getName();                //If this is a Webhook message, then there is no Member associated
-            }                                           // with the User, thus we default to the author for name.
+                name = author.getName();                //If this is a Webhook message, then there is no Member associated with the User, thus we default to the author for name.
             else
-            {
-                name = member.getEffectiveName();       //This will either use the Member's nickname if they have one,
-            }                                           // otherwise it will default to their username. (User#getName())
+                name = member.getEffectiveName();       //This will either use the Member's nickname if they have one, otherwise it will default to their username. (User#getName())
 
             System.out.printf("(%s)[%s]<%s>: %s\n", guild.getName(), textChannel.getName(), name, msg);
+            
+            if(!bot) {
+            	CommandContext commandContext = CommandContext.parse(event);
+            	
+            	if(commandContext == null)
+            		return;
+            	
+            	executeCommand(commandContext);
+            }
         }
         else if (event.isFromType(ChannelType.PRIVATE)) //If this message was sent to a PrivateChannel
         {
-            PrivateChannel privateChannel = event.getPrivateChannel();
-
             System.out.printf("[PRIV]<%s>: %s\n", author.getName(), msg);
         }
         else if (event.isFromType(ChannelType.GROUP))   //If this message was sent to a Group. This is CLIENT only!
@@ -90,21 +83,14 @@ public class EventListeners extends ListenerAdapter {
 
             System.out.printf("[GRP: %s]<%s>: %s\n", groupName, author.getName(), msg);
         }
-
-        if (msg.equals("!ping")) //Command : !ping/pong!
-        {
-            channel.sendMessage("pong!").queue();
-        }
-        else if (msg.equals("!roll")) //Command : !roll
-        {
-            Random rand = new Random();
-            int roll = rand.nextInt(6) + 1;
-            channel.sendMessage("Your roll: " + roll).queue(sentMessage ->
-            	{
-            		if (roll < 3)
-            			channel.sendMessage("The roll for messageId: " + sentMessage.getId() + " wasn't very good... Must be bad luck!\n").queue();
-            	}
-            );
-        }
+    }
+    
+    /**
+     * Sends the command context to the command manager to execute the command.
+     * 
+     * @param commandContext - the context of the command to be executed
+     */
+    public void executeCommand(CommandContext commandContext) {
+    	CommandManager.commandCalled(commandContext);
     }
 }
