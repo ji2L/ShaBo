@@ -21,8 +21,17 @@ package shabo.command;
 import shabo.command.util_commmands.PingCommand;
 import shabo.command.util_commmands.RollCommand;
 
+/**
+ * This class adds every command and their aliases to the command registry.
+ * 
+ * @author ji2L
+ *
+ */
 public class CommandInitializer {
 
+	/**
+	 * Statically initializes commands.
+	 */
 	public static void initCommands() {
 		CommandRegistry commandRegistry = new CommandRegistry();
 		commandRegistry.registerCommand(new PingCommand("ping"));
