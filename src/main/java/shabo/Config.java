@@ -30,15 +30,23 @@ import java.io.IOException;
  */
 public class Config {
 	
+	public static final Config CONFIG;
+	
 	private final String botToken;
+	private String prefix = "!";
+	
+	static {
+		CONFIG = new Config("token.txt", "config.txt");
+	}
 	
 	/**
 	 * Creates a new Config, given the name of the file to read the bot's token from.
 	 * 
 	 * @param tokenFile - the path to the file containing the bot's token
 	 */
-	public Config(String tokenFile) {
+	public Config(String tokenFile, String configFile) {
 		botToken = loadTokenFromFile(tokenFile);
+		loadConfigFromFile(configFile);
 	}
 	
 	/**
@@ -63,9 +71,40 @@ public class Config {
 	}
 	
 	/**
+	 * Loads a config file to set the bot's properties, such as the prefix used to invoke commands.
+	 * The format of the file must be : property = value (1 property/line)
+	 * 
+	 * @param fileName - the path to the config file
+	 */
+	public void loadConfigFromFile(String fileName) {
+		try(BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+			String line;
+			String[] tokenizedLine;
+			
+			while((line = br.readLine()) != null) {
+				tokenizedLine = line.split("\\p{javaSpaceChar}+");
+				
+				if(tokenizedLine[0] == "prefix" && tokenizedLine.length > 2)
+					prefix = tokenizedLine[2];
+			}
+		} catch(FileNotFoundException NFe) {
+			System.err.println("Could not open " + fileName);
+		} catch(IOException IOe) {
+			System.err.println("Could not read token");
+		}
+	}
+	
+	/**
 	 * @return The bot's token
 	 */
 	public String getBotToken() {
-		return botToken;
+		return this.botToken;
+	}
+	
+	/**
+	 * @return The prefix used to invoke commands
+	 */
+	public String getPrefix() {
+		return this.prefix;
 	}
 }
