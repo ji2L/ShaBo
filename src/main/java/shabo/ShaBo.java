@@ -23,13 +23,18 @@ import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.security.auth.login.LoginException;
 
 import shabo.command.CommandInitializer;
 import shabo.event.EventListeners;
 
-public class ShaBo extends ListenerAdapter
-{
+public class ShaBo extends ListenerAdapter {
+
+	private final Logger logger = LoggerFactory.getLogger(ShaBo.class);
+    	
     public static void main(String[] args)
     {
     	CommandInitializer.initCommands();

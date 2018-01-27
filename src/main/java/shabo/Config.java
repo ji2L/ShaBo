@@ -24,7 +24,7 @@ import java.io.FileReader;
 import java.io.IOException;
 
 /**
- * This class is used to load the bot's credentials.
+ * This class is used to load the bot's config and credentials.
  * 
  * @author ji2L
  */
@@ -33,7 +33,7 @@ public class Config {
 	public static final Config CONFIG;
 	
 	private final String botToken;
-	private String prefix = "!";	//Prefix used to invoke commands, must not be longer than 2 characters
+	private String prefix = "!";	//Default prefix used to invoke commands, must not be longer than 2 characters
 	
 	static {
 		CONFIG = new Config("token.txt", "config.txt");
