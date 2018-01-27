@@ -33,7 +33,7 @@ public class Config {
 	public static final Config CONFIG;
 	
 	private final String botToken;
-	private String prefix = "!";
+	private String prefix = "!";	//Prefix used to invoke commands, must not be longer than 2 characters
 	
 	static {
 		CONFIG = new Config("token.txt", "config.txt");
@@ -84,8 +84,14 @@ public class Config {
 			while((line = br.readLine()) != null) {
 				tokenizedLine = line.split("\\p{javaSpaceChar}+");
 				
-				if(tokenizedLine[0] == "prefix" && tokenizedLine.length > 2)
-					prefix = tokenizedLine[2];
+				if(tokenizedLine.length > 2) {
+					if(tokenizedLine[0].equals("prefix") && tokenizedLine[2].length() < 3)
+						prefix = tokenizedLine[2];
+				}
+				else {
+					if(tokenizedLine.length > 0)
+						System.err.printf("%s : property not correctly formatted, use \"property = value\"\n", line);
+				}
 			}
 		} catch(FileNotFoundException NFe) {
 			System.err.println("Could not open " + fileName);

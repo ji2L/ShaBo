@@ -38,6 +38,11 @@ import shabo.command.CommandManager;
  */
 public class EventListeners extends ListenerAdapter {
 	
+	/**
+	 * Processes MessageReceivedEvents
+	 * 
+	 * @param event - the received event to be processed
+	 */
     @Override
     public void onMessageReceived(MessageReceivedEvent event)
     {

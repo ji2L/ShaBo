@@ -18,9 +18,14 @@
 
 package shabo.command;
 
+import shabo.command.util_commmands.PingCommand;
+import shabo.command.util_commmands.RollCommand;
+
 public class CommandInitializer {
 
 	public static void initCommands() {
-		
+		CommandRegistry commandRegistry = new CommandRegistry();
+		commandRegistry.registerCommand(new PingCommand("ping"));
+		commandRegistry.registerCommand(new RollCommand("roll", "r"));
 	}
 }

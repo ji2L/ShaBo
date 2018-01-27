@@ -25,12 +25,15 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 import javax.security.auth.login.LoginException;
 
+import shabo.command.CommandInitializer;
 import shabo.event.EventListeners;
 
 public class ShaBo extends ListenerAdapter
 {
     public static void main(String[] args)
     {
+    	CommandInitializer.initCommands();
+    	
         try {
             JDA jda = new JDABuilder(AccountType.BOT)
                     		.setToken(Config.CONFIG.getBotToken())
