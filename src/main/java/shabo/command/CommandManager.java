@@ -20,8 +20,18 @@ package shabo.command;
 
 import shabo.command.abs.Command;
 
+/**
+ * Invokes a command provided its context.
+ * 
+ * @author ji2L
+ */
 public class CommandManager {
 	
+	/**
+	 * Statically invokes a command from its context.
+	 * 
+	 * @param commandContext - the context of the command
+	 */
 	public static void commandCalled(CommandContext commandContext) {
 		Command command = commandContext.getCommand();
 		

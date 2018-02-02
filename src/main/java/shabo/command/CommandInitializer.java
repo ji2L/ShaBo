@@ -25,7 +25,6 @@ import shabo.command.util_commmands.RollCommand;
  * This class adds every command and their aliases to the command registry.
  * 
  * @author ji2L
- *
  */
 public class CommandInitializer {
 

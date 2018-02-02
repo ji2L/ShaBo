@@ -28,24 +28,28 @@ import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import shabo.command.CommandContext;
 import shabo.command.CommandManager;
 
 /**
- * This class contains the event listeners used by the bot.
+ * Contains the event listeners used by the bot.
  * 
  * @author ji2L
  */
 public class EventListeners extends ListenerAdapter {
 	
+	private static final Logger logger = LoggerFactory.getLogger(EventListeners.class);
+
 	/**
 	 * Processes MessageReceivedEvents
 	 * 
 	 * @param event - the received event to be processed
 	 */
     @Override
-    public void onMessageReceived(MessageReceivedEvent event)
-    {
+    public void onMessageReceived(MessageReceivedEvent event) {
         //Event specific information
         User author = event.getAuthor();                //The user that sent the message
         Message message = event.getMessage();           //The message that was received.
@@ -53,8 +57,7 @@ public class EventListeners extends ListenerAdapter {
 
         boolean bot = author.isBot();
 
-        if (event.isFromType(ChannelType.TEXT))         //If this message was sent to a Guild TextChannel
-        {
+        if (event.isFromType(ChannelType.TEXT)) {       //If this message was sent to a Guild TextChannel
         	//Guild specific information
             Guild guild = event.getGuild();             //The Guild that this message was sent in. (Guilds are Servers)
             TextChannel textChannel = event.getTextChannel(); //The TextChannel that this message was sent to.
@@ -67,6 +70,7 @@ public class EventListeners extends ListenerAdapter {
                 name = member.getEffectiveName();       //This will either use the Member's nickname if they have one, otherwise it will default to their username. (User#getName())
 
             System.out.printf("(%s)[%s]<%s>: %s\n", guild.getName(), textChannel.getName(), name, msg);
+            logger.info("({})[{}]<{}>: {}", guild.getName(), textChannel.getName(), name, msg);
             
             if(!bot) {
             	CommandContext commandContext = CommandContext.parse(event);
@@ -77,16 +81,16 @@ public class EventListeners extends ListenerAdapter {
             	executeCommand(commandContext);
             }
         }
-        else if (event.isFromType(ChannelType.PRIVATE)) //If this message was sent to a PrivateChannel
-        {
+        else if (event.isFromType(ChannelType.PRIVATE)) { //If this message was sent to a PrivateChannel
             System.out.printf("[PRIV]<%s>: %s\n", author.getName(), msg);
+            logger.info("[PRIV]<{}>: {}", author.getName(), msg);
         }
-        else if (event.isFromType(ChannelType.GROUP))   //If this message was sent to a Group. This is CLIENT only!
-        {
+        else if (event.isFromType(ChannelType.GROUP)) {  //If this message was sent to a Group. This is CLIENT only!
             Group group = event.getGroup();
             String groupName = group.getName() != null ? group.getName() : "";  //A group name can be null due to it being unnamed.
 
             System.out.printf("[GRP: %s]<%s>: %s\n", groupName, author.getName(), msg);
+            logger.info("[GRP: {}]<{}>: {}", groupName, author.getName(), msg);
         }
     }
     

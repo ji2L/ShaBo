@@ -23,20 +23,24 @@ import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
+import javax.security.auth.login.LoginException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.security.auth.login.LoginException;
 
 import shabo.command.CommandInitializer;
 import shabo.event.EventListeners;
 
+/**
+ * Creates the JDA isntance and initializes the bot.
+ * 
+ * @author ji2L
+ */
 public class ShaBo extends ListenerAdapter {
 
-	private final Logger logger = LoggerFactory.getLogger(ShaBo.class);
+	private static final Logger logger = LoggerFactory.getLogger(ShaBo.class);
     	
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) {
     	CommandInitializer.initCommands();
     	
         try {
@@ -45,9 +49,9 @@ public class ShaBo extends ListenerAdapter {
                     		.addEventListener(new EventListeners())
                     		.buildBlocking();
         } catch (LoginException e) {
-            e.printStackTrace();
+        	logger.error("LoginException");
         } catch (InterruptedException e) {
-            e.printStackTrace();
+        	logger.error("InteruptException");
         }
     }
 }

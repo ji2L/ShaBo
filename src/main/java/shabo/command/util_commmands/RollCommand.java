@@ -27,10 +27,19 @@ import shabo.command.abs.Command;
 
 public class RollCommand extends Command {
 
+	/**
+	 * Constructor of the roll command.
+	 * 
+	 * @param name - name of the command
+	 * @param aliases - aliases of the command
+	 */
 	public RollCommand(String name, String... aliases) {
 		super(name, aliases);
 	}
 
+	/**
+	 * Invokes the command.
+	 */
 	@Override
 	public void invoke(CommandContext commandContext) {
         Random rand = new Random();
@@ -47,7 +56,7 @@ public class RollCommand extends Command {
 
 	@Override
 	public String help() {
-		return null;
+		return "Roll a d6.";
 	}
 
 }
