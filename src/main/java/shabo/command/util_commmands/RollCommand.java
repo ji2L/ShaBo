@@ -51,27 +51,64 @@ public class RollCommand extends Command {
 	
 	// Parses a roll expression and creates a list of subexpressions
 	private ArrayList<Roll> parseRoll(String rollExpression) throws InvalidRollExpressionException {
+		rollExpression = rollExpression.replace("-", "+-");
 		String[] parts = rollExpression.split("\\+");
 		ArrayList<Roll> res = new ArrayList<Roll>();
 		
 		String modifier = "(\\d+)";
 		String roll = "d(\\d+)";
+		String minus = "(\\-?)";
 		
-		Pattern modifierPattern = Pattern.compile("^" + modifier + "$");
-		Pattern rollPattern = Pattern.compile("^" + roll + "$");
-		Pattern multRollPattern = Pattern.compile("^" + modifier + roll + "$");
+		Pattern modifierPattern = Pattern.compile("^" + minus + modifier + "$");
+		Pattern rollPattern = Pattern.compile("^" + minus + roll + "$");
+		Pattern multRollPattern = Pattern.compile("^" + minus + modifier + roll + "$");
 
 		for(String s : parts) {
+			if("".equals(s)) { // if rollExpression starts with '-', after replace and split the first element of parts will be empty
+				System.out.println("continue\n");
+				continue;
+			}
+			
 			if(modifierPattern.matcher(s).matches()) {
-				res.add(new Roll(0, 0, Integer.parseInt(s)));
+				int mod = Integer.parseInt(s);
+				if(mod == 0)
+					continue;
+				
+				if(mod < 0)
+					res.add(new Roll(0, 0, mod, exprSign.NEGATIVE));
+				else
+					res.add(new Roll(0, 0, mod, exprSign.POSITIVE));
 			}
 			else if(rollPattern.matcher(s).matches()) {
-				String dice = s.substring(1, s.length());
-				res.add(new Roll(1, Integer.parseInt(dice), 0));
+				if(s.startsWith("-")) {
+					String dice = s.substring(2, s.length());	// substract "-d"
+					
+					if(Integer.parseInt(dice) == 0)
+						continue;
+					
+					res.add(new Roll(1, Integer.parseInt(dice), 0, exprSign.NEGATIVE));
+				}
+				else {
+					String dice = s.substring(1, s.length());	//substract "d"
+					
+					if(Integer.parseInt(dice) == 0)
+						continue;
+					
+					res.add(new Roll(1, Integer.parseInt(dice), 0, exprSign.POSITIVE));
+				}
 			}
 			else if(multRollPattern.matcher(s).matches()) {
 				String[] multRoll = s.split("d");
-				res.add(new Roll(Integer.parseInt(multRoll[0]), Integer.parseInt(multRoll[1]), 0));
+				int mul = Integer.parseInt(multRoll[0]);
+				int dice = Integer.parseInt(multRoll[1]);
+				
+				if(mul == 0 || dice == 0)
+					continue;
+				
+				if(mul < 0)
+					res.add(new Roll(-mul, Integer.parseInt(multRoll[1]), 0, exprSign.NEGATIVE));
+				else
+					res.add(new Roll(mul, Integer.parseInt(multRoll[1]), 0, exprSign.POSITIVE));
 			}
 			else
 				throw new InvalidRollExpressionException();
@@ -98,38 +135,68 @@ public class RollCommand extends Command {
 		String res = "```";
 		int total = 0;
 		
+		if(parts.size() == 0)
+			return res + total + "```";
+		
 		boolean isFirstItr = true;
 		for(Roll r : parts) {
-			if(r.modifier != 0) {
+			if(r.modifier != 0) {	// this is only a modifer
 				if(isFirstItr) {
 					res += r.modifier;
 					total += r.modifier;
 					isFirstItr = false;
 				}
 				else {
-					res += " + " + r.modifier;
+					if(r.isNegative) {
+						res += " - ";
+						res += -r.modifier;		// use the opposite value because we don't want to display the '-'
+					}
+					else
+						res += " + " + r.modifier;
+					
+
 					total += r.modifier;
 				}
 			}
 			else {
 				if(r.mult == 1) {	// this is a simple roll (i.e. : d20)
 					if(isFirstItr) {
-						res += r.result.get(0);
-						total += r.result.get(0);
+						if(r.isNegative) {
+							res += "-" + r.result.get(0);
+							total -= r.result.get(0);
+						}
+						else {
+							res += r.result.get(0);
+							total += r.result.get(0);
+						}
+						
 						isFirstItr = false;
 					}
 					else {
-						res += " + " + r.result.get(0);
-						total += r.result.get(0);
+						if(r.isNegative) {
+							res += " - " + r.result.get(0);
+							total -= r.result.get(0);
+						}
+						else {
+							res += " + " + r.result.get(0);
+							total += r.result.get(0);
+						}
 					}
 				}
 				else {				// this is a multRoll (i.e. : 4d6)
 					if(isFirstItr) {
+						if(r.isNegative)
+							res +="-";
+							
 						res += "( ";
 						isFirstItr = false;
 					}
-					else
-						res += " + ( ";
+					else {
+						if(r.isNegative)
+							res += " - ( ";
+						else
+							res += " + ( ";
+					}
 						
 					for(int i = 0; i < r.result.size(); i++) {
 						if(i == r.result.size() - 1)
@@ -137,7 +204,10 @@ public class RollCommand extends Command {
 						else
 							res += r.result.get(i) + " + ";
 						
-						total += r.result.get(i);
+						if(r.isNegative)
+							total -= r.result.get(i);
+						else
+							total += r.result.get(i);
 					}
 						
 					res += ")";
@@ -168,13 +238,13 @@ public class RollCommand extends Command {
         	String res = rollToString(roll);
         	textChannel.sendMessage(res).queue();
         } catch(InvalidRollExpressionException e) {
-        	textChannel.sendMessage("Invalid roll expression, use the following format : ```XdY+Z```\n").queue();
+        	textChannel.sendMessage("Invalid roll expression, use the following format : ```XdY +/- Z```\nexample : 2d20 + 3d6 + 4").queue();
         }
 	}
 
 	@Override
 	public String help() {
-		return "Roll dice according to an expression following the format : ```XdY+Z```\n";
+		return "Roll dice according to an expression following the format : ```XdY +/- Z```\nexample : 2d20 + 3d6 + 4";
 	}
 	
 	// Inner class which represents a roll
@@ -182,13 +252,26 @@ public class RollCommand extends Command {
 		private int mult;
 		private int dice;
 		private int modifier;
+		private boolean isNegative;
 		private ArrayList<Integer> result;
 		
-		public Roll(int mult, int dice, int modifier) {
+		public Roll(int mult, int dice, int modifier, exprSign sign) {
 			this.mult = mult;
 			this.dice = dice;
 			this.modifier = modifier;
+			this.isNegative = sign.value;
 			this.result = new ArrayList<Integer>();
+		}
+	}
+	
+	// Enum which represents the sign of a roll subexpression
+	public enum exprSign { 
+		POSITIVE(false), NEGATIVE(true);
+		
+		private boolean value;
+		
+		private exprSign(boolean value) {
+			this.value = value;
 		}
 	}
 }
