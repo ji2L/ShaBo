@@ -64,10 +64,8 @@ public class RollCommand extends Command {
 		Pattern multRollPattern = Pattern.compile("^" + minus + modifier + roll + "$");
 
 		for(String s : parts) {
-			if("".equals(s)) { // if rollExpression starts with '-', after replace and split the first element of parts will be empty
-				System.out.println("continue\n");
+			if("".equals(s)) // if rollExpression starts with '-', after replace and split the first element of parts will be empty
 				continue;
-			}
 			
 			if(modifierPattern.matcher(s).matches()) {
 				int mod = Integer.parseInt(s);
@@ -238,13 +236,13 @@ public class RollCommand extends Command {
         	String res = rollToString(roll);
         	textChannel.sendMessage(res).queue();
         } catch(InvalidRollExpressionException e) {
-        	textChannel.sendMessage("Invalid roll expression, use the following format : ```XdY +/- Z```\nexample : 2d20 + 3d6 + 4").queue();
+        	textChannel.sendMessage("```Invalid roll expression, use the following format : XdY +/- Z (example : 2d20 + d6 - 4)```\n").queue();
         }
 	}
 
 	@Override
 	public String help() {
-		return "Roll dice according to an expression following the format : ```XdY +/- Z```\nexample : 2d20 + 3d6 + 4";
+		return "Roll dice according to an expression following the format : XdY +/- Z (example : 2d20 + d6 - 4)";
 	}
 	
 	// Inner class which represents a roll

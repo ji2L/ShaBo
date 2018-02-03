@@ -19,6 +19,8 @@
 package shabo.command;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -71,5 +73,21 @@ public class CommandRegistry {
 	@Nullable
 	public static Command findCommand(@Nonnull String name) {
 		return commandRegistry.getCommand(name);
+	}
+	
+	/**
+	 * Statically returns every command in the command registry.
+	 * 
+	 * @return A list containing every registered command.
+	 */
+	public static List<Command> getAllCommands() {
+		List<Command> commands = new ArrayList<Command>();
+		
+		for(Command c : CommandRegistry.commandRegistry.registry.values()) {
+			if(!commands.contains(c))
+				commands.add(c);
+		}
+		
+		return commands;
 	}
 }
