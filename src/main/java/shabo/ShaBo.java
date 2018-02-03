@@ -48,6 +48,8 @@ public class ShaBo extends ListenerAdapter {
                     		.setToken(Config.CONFIG.getBotToken())
                     		.addEventListener(new EventListeners())
                     		.buildBlocking();
+            
+            logger.info("ping = " + jda.getPing() + "ms");
         } catch (LoginException e) {
         	logger.error("LoginException");
         } catch (InterruptedException e) {
