@@ -24,7 +24,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 /**
- * Abstract class to describe a command.
+ * Abstract class that describes a command.
  * 
  * @author ji2L
  */

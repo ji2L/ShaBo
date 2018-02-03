@@ -16,30 +16,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package shabo.command.abs;
-
-import javax.annotation.Nonnull;
-
-import shabo.command.CommandContext;
+package shabo.util;
 
 /**
- * Interface forcing commands to have at least "invoke" and "help" mehtods
+ * Thrown when a roll expression does not match the defined format.
  * 
  * @author ji2L
- *
  */
-public interface ICommand {
+public class InvalidRollExpressionException extends Exception {
 	
-	/**
-	 * Invokes the command.
-	 * 
-	 * @param commandContext - the context in which the command was sent
-	 */
-	public void invoke(CommandContext commandContext);
-	
-	/**
-	 * @return A string describing the command and, if needed, how to use it 
-	 */
-	@Nonnull
-	public String help();
+	private static final long serialVersionUID = -7865967346882272499L;
+
+	public InvalidRollExpressionException() {
+		super();
+	}
 }

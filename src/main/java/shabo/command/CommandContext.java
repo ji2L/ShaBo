@@ -22,6 +22,9 @@ import java.util.Arrays;
 
 import javax.annotation.Nonnull;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
@@ -39,6 +42,8 @@ import shabo.command.abs.Command;
  * @author ji2L
  */
 public class CommandContext {
+	
+	private static final Logger logger = LoggerFactory.getLogger(CommandContext.class);
 
 	private final Guild guild;				//The Guild that this message was sent in. (Guilds are Servers)
 	private final TextChannel textChannel;	//The TextChannel that this message was sent to.
@@ -87,6 +92,7 @@ public class CommandContext {
         
         if(command == null) {
         	System.err.println("Couldn't find command " + trigger);
+        	logger.error("Couldn't find command {}" + trigger);
         	return null;
         }
         

@@ -42,7 +42,7 @@ public class ShaBo extends ListenerAdapter {
     	
     public static void main(String[] args) {
     	CommandInitializer.initCommands();
-    	
+ 
         try {
             JDA jda = new JDABuilder(AccountType.BOT)
                     		.setToken(Config.CONFIG.getBotToken())
